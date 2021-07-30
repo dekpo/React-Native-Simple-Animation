@@ -4,18 +4,36 @@ import { Animated, StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
   const opacityVal = useRef(new Animated.Value(1)).current;
+  const posYVal = useRef(new Animated.Value(0)).current;
 
   const fadeOut = () => {
+
     Animated.timing(opacityVal, {
       toValue: 0,
       duration: 5000
     }).start();
+
+    Animated.timing(posYVal, {
+      toValue: -200,
+      duration: 2000
+    }).start();
+
   }
   const fadeIn = () => {
     Animated.timing(opacityVal, {
       toValue: 1,
       duration: 5000
     }).start();
+
+    Animated.timing(posYVal, {
+      toValue: 0,
+      duration: 2000
+    }).start();
+  }
+
+  const stopAnim = () => {
+    opacityVal.stopAnimation((value)=>console.log('opacityVal:',value));
+    posYVal.stopAnimation((value)=>console.log('posYVal:',value));
   }
 
   return (
@@ -24,7 +42,10 @@ export default function App() {
         [
           styles.fadeContainer,
           {
-            opacity: opacityVal
+            opacity: opacityVal,
+            transform: [
+              {translateY: posYVal}
+            ]
           }
         ]
       }>
@@ -33,6 +54,7 @@ export default function App() {
 
       <Button title="Fade Out" onPress={fadeOut} />
       <Button title="Fade In" onPress={fadeIn} />
+      <Button title="Stop !" onPress={stopAnim} />
       <StatusBar style="auto" />
     </View>
   );
